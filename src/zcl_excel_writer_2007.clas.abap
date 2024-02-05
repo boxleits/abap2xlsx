@@ -4214,7 +4214,6 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
           lo_autofilter          TYPE REF TO zcl_excel_autofilter,
           l_autofilter_hidden    TYPE flag,
           lt_values              TYPE zexcel_t_autofilter_values,
-          ls_values              TYPE zexcel_s_autofilter_values,
           ls_area                TYPE zexcel_s_autofilter_area,
 
           lo_iterator            TYPE REF TO zcl_excel_collection_iterator,
@@ -4329,8 +4328,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       IF lt_values IS INITIAL. " no values attached to autofilter  " issue #368 autofilter filtering too much
         CLEAR l_autofilter_hidden.
       ELSE.
-        READ TABLE lt_values INTO ls_values WITH KEY column = ls_last_row-cell_column.
-        IF sy-subrc = 0 AND ls_values-value = ls_last_row-cell_value.
+        READ TABLE lt_values TRANSPORTING NO FIELDS WITH KEY column = ls_last_row-cell_column value = ls_last_row-cell_value.
+        IF sy-subrc = 0.
           CLEAR l_autofilter_hidden.
         ENDIF.
       ENDIF.
@@ -4540,8 +4539,8 @@ CLASS zcl_excel_writer_2007 IMPLEMENTATION.
       ls_last_row = <ls_sheet_content>.
     ENDLOOP.
     IF sy-subrc = 0.
-      READ TABLE lt_values INTO ls_values WITH KEY column = ls_last_row-cell_column.
-      IF sy-subrc = 0 AND ls_values-value = ls_last_row-cell_value.
+      READ TABLE lt_values TRANSPORTING NO FIELDS WITH KEY column = ls_last_row-cell_column value = ls_last_row-cell_value.
+      IF sy-subrc = 0.
         CLEAR l_autofilter_hidden.
       ENDIF.
       IF lo_autofilter IS BOUND.
